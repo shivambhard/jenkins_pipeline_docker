@@ -7,17 +7,16 @@ def descriptor = new JDK.DescriptorImpl();
 
 def List<JDK> installations = []
 
-javaTools=[['name':'jdk8', 'id':'jdk-8u152-oth-JPR'],
-      ['name':'jdk7', 'id':'jdk-7u80-oth-JPR']]
+javaTools=[['name':'jdk8', 'url':'file:/var/jenkins_home/downloads/jdk-8u131-linux-x64.tar.gz', 'subdir':'jdk1.8.0_131'],
+      ['name':'jdk7', 'url':'file:/var/jenkins_home/downloads/jdk-7u76-linux-x64.tar.gz', 'subdir':'jdk1.7.0_76']]
 
 javaTools.each { javaTool ->
 
     println("Setting up tool: ${javaTool.name}")
 
-    def installer = new JDKInstaller(v.value, true)
-	def installerProps = new InstallSourceProperty([installer])
-	def installation = new JDK(v.key, "", [installerProps])
-	installations.push(installation)
+    def installer = new ZipExtractionInstaller(javaTool.label as String, javaTool.url as String, javaTool.subdir as String);
+    def jdk = new JDK(javaTool.name as String, null, [new InstallSourceProperty([installer])])
+    installations.add(jdk)
 
 }
 descriptor.setInstallations(installations.toArray(new JDK[installations.size()]))
