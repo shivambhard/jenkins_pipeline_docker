@@ -1,23 +1,23 @@
-import hudson.model.JDK
-import hudson.tools.InstallSourceProperty
-import hudson.tools.ZipExtractionInstaller
+import jenkins.model.*
+import hudson.model.*
+import hudson.tools.*
 
-def descriptor = new JDK.DescriptorImpl();
+def inst = Jenkins.getInstance()
 
+def desc = inst.getDescriptor("hudson.model.JDK")
 
-def List<JDK> installations = []
+def versions = [
+  "jdk9.0.1": "jdk-9.0.1-oth-JPR"
+]
+def installations = [];
 
-javaTools=[['name':'jdk8', 'url':'file:/var/jenkins_home/downloads/jdk-8u131-linux-x64.tar.gz', 'subdir':'jdk1.8.0_131'],
-      ['name':'jdk7', 'url':'file:/var/jenkins_home/downloads/jdk-7u76-linux-x64.tar.gz', 'subdir':'jdk1.7.0_76']]
-
-javaTools.each { javaTool ->
-
-    println("Setting up tool: ${javaTool.name}")
-
-    def installer = new ZipExtractionInstaller(javaTool.label as String, javaTool.url as String, javaTool.subdir as String);
-    def jdk = new JDK(javaTool.name as String, null, [new InstallSourceProperty([installer])])
-    installations.add(jdk)
-
+for (v in versions) {
+  def installer = new JDKInstaller(v.value, true)
+  def installerProps = new InstallSourceProperty([installer])
+  def installation = new JDK(v.key, "", [installerProps])
+  installations.push(installation)
 }
-descriptor.setInstallations(installations.toArray(new JDK[installations.size()]))
-descriptor.save()
+
+desc.setInstallations(installations.toArray(new JDK[0]))
+
+desc.save()  
