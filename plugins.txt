@@ -61,7 +61,7 @@ workflow-aggregator:2.5
 github-api:1.90
 git:3.6.4
 github:1.28.1
-github-branch-sourc:2.3.1
+github-branch-source:2.3.1
 pipeline-github-lib:1.0
 mapdb-api:1.0.9.0
 subversion:2.9
