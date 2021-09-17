@@ -1,4 +1,4 @@
-FROM jenkins:2.60.3
+FROM jenkins/jenkins:lts-jdk11
 
 LABEL maintainer="RakeshKumar <rakesh635@gmail.com>"
 
